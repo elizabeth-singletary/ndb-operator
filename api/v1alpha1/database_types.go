@@ -88,6 +88,9 @@ type Instance struct {
 	// Id of the cluster to provision the database on
 	ClusterId string `json:"clusterId"`
 	// +optional
+	// Name of the cluster to provision the database on
+	ClusterName string `json:"clusterName"`
+	// +optional
 	Profiles *Profiles `json:"profiles"`
 	// Name of the secret holding the credentials for the database instance (password and ssh key)
 	CredentialSecret string `json:"credentialSecret"`

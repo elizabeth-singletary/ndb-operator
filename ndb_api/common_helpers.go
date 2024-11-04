@@ -46,6 +46,11 @@ func sendRequest(ctx context.Context, ndbClient ndb_client.NDBClientHTTPInterfac
 	}
 
 	req, err := ndbClient.NewRequest(method, endpoint, payload)
+
+	fmt.Printf("Request Method: %s\n", req.Method)
+	fmt.Printf("Request URL: %s\n", req.URL.String())
+	fmt.Printf("Request Headers: %v\n", req.Header)
+
 	if err != nil {
 		log.Error(err, "An error occurred while creating the HTTP request")
 		return

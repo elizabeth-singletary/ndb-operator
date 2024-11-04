@@ -76,6 +76,7 @@ func (ndbClient *NDBClient) NewRequest(method, endpoint string, requestBody inte
 	// Set headers
 	req.SetBasicAuth(ndbClient.username, ndbClient.password)
 	req.Header.Add("Content-Type", "application/json; charset=utf-8")
+	req.Header.Add("Cookie", "eraAuth=eyJhbGciOiJSUzUxMiJ9")
 
 	return req, nil
 }

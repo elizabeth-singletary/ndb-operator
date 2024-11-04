@@ -141,6 +141,9 @@ spec:
                   clusterId:
                     description: Id of the cluster to provision the database on
                     type: string
+                  clusterName:
+                    description: Name of the cluster to provision the database on
+                    type: string
                   credentialSecret:
                     description: Name of the secret holding the credentials for the
                       database instance (password and ssh key)

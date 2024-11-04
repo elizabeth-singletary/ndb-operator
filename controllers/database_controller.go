@@ -35,6 +35,7 @@ import (
 
 	ndbv1alpha1 "github.com/nutanix-cloud-native/ndb-operator/api/v1alpha1"
 	"github.com/nutanix-cloud-native/ndb-operator/common/util"
+	"github.com/nutanix-cloud-native/ndb-operator/ndb_api"
 	"github.com/nutanix-cloud-native/ndb-operator/ndb_client"
 )
 
@@ -94,6 +95,7 @@ func (r *DatabaseReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 
 	NDBInfo := ndbServer.Spec
 	username, password, caCert, err := getNDBCredentialsFromSecret(ctx, r.Client, NDBInfo.CredentialSecret, req.Namespace)
+
 	if err != nil {
 		r.recorder.Eventf(database, "Warning", EVENT_INVALID_CREDENTIALS, "Error: %s", err.Error())
 		return requeueOnErr(err)
@@ -101,7 +103,12 @@ func (r *DatabaseReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	if caCert == "" {
 		log.Info("Ca-cert not found, falling back to host's HTTPs certs.")
 	}
+
 	ndbClient := ndb_client.NewNDBClient(username, password, NDBInfo.Server, caCert, NDBInfo.SkipCertificateVerification)
+	if database.Spec.Instance.ClusterId == "" {
+		ClusterResp := ndb_api.GetClusterByName(ctx, ndbClient, database.Spec.Instance.ClusterName)
+		database.Spec.Instance.ClusterId = ClusterResp.ID
+	}
 
 	return r.handleSync(ctx, database, ndbClient, req, ndbServer)
 }
