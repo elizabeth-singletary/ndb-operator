@@ -141,6 +141,7 @@ func (r *DatabaseReconciler) handleSync(ctx context.Context, database *ndbv1alph
 	log.Info("Entered database_reconciler_helpers.handleSync")
 
 	databaseStatus := database.Status.DeepCopy()
+	print("THIS IS DATABASBE CLUSTER ID", database.Spec.Instance.ClusterId)
 
 	instanceManager := getInstanceManager(*database)
 
@@ -192,9 +193,15 @@ func (r *DatabaseReconciler) handleSync(ctx context.Context, database *ndbv1alph
 		databaseStatus.IPAddress = dbInfo.IPAddress
 		databaseStatus.DatabaseServerId = dbInfo.DBServerId
 		databaseStatus.Type = ndb_api.GetDatabaseTypeFromEngine(dbInfo.Type)
+
 	} else {
 		log.Info("Database missing from NDB CR")
 		databaseStatus.Status = common.DATABASE_CR_STATUS_NOT_FOUND
+	}
+
+	if err := r.Update(ctx, database); err != nil {
+		log.Error(err, "Failed to update spec of database custom resource")
+		return requeueOnErr(err)
 	}
 
 	if !reflect.DeepEqual(database.Status, *databaseStatus) {

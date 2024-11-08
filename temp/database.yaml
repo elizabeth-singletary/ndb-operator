@@ -2,7 +2,7 @@ apiVersion: ndb.nutanix.com/v1alpha1
 kind: Database
 metadata:
   # This name that will be used within the kubernetes cluster
-  name: db
+  name: db3
 spec:
   # Name of the NDBServer resource created earlier
   ndbRef: ndb
@@ -15,7 +15,7 @@ spec:
     # Name of the cluster to provision the database on
     clusterName: "Durham_AOS_Cluster"
     # # The database instance name on NDB
-    name: "Database-Instance-Name"
+    name: "Database-Instance-Name3"
     # The description of the database instance
     description: Database Description
     # Names of the databases on that instance
